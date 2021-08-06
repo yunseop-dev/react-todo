@@ -1,9 +1,6 @@
-import {
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Register from './page/Register'
+import Login from './page/Login'
 function App() {
   return (
     <Switch>
@@ -12,6 +9,9 @@ function App() {
       </Route>
       <Route path="/register">
         <Register />
+      </Route>
+      <Route path="/login">
+        <Login />
       </Route>
     </Switch>
   );
