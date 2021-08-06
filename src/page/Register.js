@@ -3,6 +3,10 @@ import { API_URL } from '../constants'
 import fetchPost from '../lib/fetchPost'
 import useInput from '../lib/useInput'
 import useLocalStorage from '../lib/useLocalStorage'
+
+import { useDispatch } from "react-redux"
+import { me } from '../modules/user'
+
 const Register = () => {
     const history = useHistory()
     const [name, onChangeName] = useInput('')
@@ -10,15 +14,18 @@ const Register = () => {
     const [password, onChangePassword] = useInput('')
     const [age, onChangeAge] = useInput(20)
 
-    const [token, setToken] = useLocalStorage('token', '')
-    const [userInfo, setUserInfo] = useLocalStorage('userInfo', '')
+    const [, setToken] = useLocalStorage('token', '')
+
+    const dispatch = useDispatch()
 
     async function onSubmit(e) {
         e.preventDefault();
         try {
             const result = await fetchPost(`${API_URL}/user/register`, { name, email, password, age })
             setToken(`Bearer ${result.token}`)
-            setUserInfo(result.user)
+            dispatch(me({
+                user: result.user
+            }))
             history.push('/')
         } catch (error) {
             console.log(error)

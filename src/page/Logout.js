@@ -1,17 +1,18 @@
-import useInput from "../lib/useInput"
 import fetchPost from "../lib/fetchPost"
 import { API_URL } from "../constants"
 import useLocalStorage from "../lib/useLocalStorage"
 import { useHistory } from "react-router-dom"
 import { useEffect } from "react"
+import { useDispatch } from "react-redux"
+import { me } from '../modules/user'
 
 const Logout = () => {
     const history = useHistory()
     const [token, setToken] = useLocalStorage('token', '')
-    const [userInfo, setUserInfo] = useLocalStorage('userInfo', '')
+    const dispatch = useDispatch()
     useEffect(() => {
         onLogout()
-    }, [])
+    })
     const onLogout = async () => {
         try {
             const result = await fetchPost(`${API_URL}/user/logout`, undefined, {
@@ -19,7 +20,9 @@ const Logout = () => {
             })
             if (result.success) {
                 setToken('')
-                setUserInfo(null)
+                dispatch(me({
+                    user: null
+                }))
                 history.push('/')
             }
         } catch (error) {

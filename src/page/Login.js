@@ -3,20 +3,23 @@ import fetchPost from "../lib/fetchPost"
 import { API_URL } from "../constants"
 import useLocalStorage from "../lib/useLocalStorage"
 import { useHistory } from "react-router-dom"
-
+import { useDispatch } from "react-redux"
+import { me } from '../modules/user'
 const Login = () => {
     const history = useHistory()
     const [email, onChangeEmail] = useInput('')
     const [password, onChangePassword] = useInput('')
-    const [token, setToken] = useLocalStorage('token', '')
-    const [userInfo, setUserInfo] = useLocalStorage('userInfo', '')
+    const [, setToken] = useLocalStorage('token', '')
+    const dispatch = useDispatch()
 
     const onSubmit = async (e) => {
         e.preventDefault()
         try {
             const result = await fetchPost(`${API_URL}/user/login`, { email, password })
             setToken(`Bearer ${result.token}`)
-            setUserInfo(result.user)
+            dispatch(me({
+                user: result.user
+            }))
             history.push('/')
         } catch (error) {
             alert(error)
