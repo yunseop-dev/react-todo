@@ -47,7 +47,7 @@ const Profile = () => {
     return <div>
         <h1>{user?.name || 'Guest'}'s Profile</h1>
         <form onSubmit={onSubmit}>
-            {user && <img src={`${process.env.REACT_APP_API_URL}/user/${user?._id}/avatar`} width="100" height="100" />}
+            {user && <img src={user.avatar} width="100" height="100" />}
             <ul>
                 <li>
                     <label htmlFor='avatar'>

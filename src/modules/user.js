@@ -125,7 +125,9 @@ function user(state = initialState, action) {
         case GET_USER_SUCCESS:
         case REGISTER_SUCCESS:
         case UPDATE_USER_SUCCESS:
-            return { ...state, user: action.user }
+            return { ...state, user: { ...action.user, avatar: `${process.env.REACT_APP_API_URL}/user/${action.user._id}/avatar?d=${new Date().getTime()}` } }
+        case UPLOAD_AVATAR_SUCCESS:
+            return { ...state, user: { ...state.user, avatar: `${process.env.REACT_APP_API_URL}/user/${state.user._id}/avatar?d=${new Date().getTime()}` } }
         case REMOVE_USER_SUCCESS:
         case LOGOUT_SUCCESS:
             return { ...state, user: null }
