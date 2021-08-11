@@ -11,19 +11,19 @@ const Profile = () => {
     const dispatch = useDispatch()
 
     const { value: file, onChange: onChangeFile } = useFile(undefined)
-    const { value: email, onChange: onChangeEmail } = useInput('')
-    const { value: name, onChange: onChangeName } = useInput('')
+    const { value: email, setValue: setEmail } = useInput('')
+    const { value: name, onChange: onChangeName, setValue: setName } = useInput('')
     const { value: password, onChange: onChangePassword } = useInput('')
-    const { value: age, onChange: onChangeAge } = useInput(0)
+    const { value: age, onChange: onChangeAge, setValue: setAge } = useInput(0)
 
     useEffect(() => {
         if (!user && token) {
             dispatch(getUser())
         }
         if (user) {
-            onChangeEmail({ target: { value: user.email } })
-            onChangeName({ target: { value: user.name } })
-            onChangeAge({ target: { value: user.age } })
+            setEmail(user.email)
+            setName(user.name)
+            setAge(user.age)
         }
     }, [dispatch, user, token])
 
