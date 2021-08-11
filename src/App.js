@@ -3,6 +3,7 @@ import Register from './page/Register'
 import Login from './page/Login'
 import Logout from './page/Logout'
 import MainPage from './page/MainPage'
+import Profile from './page/Profile'
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
       </Route>
       <Route path="/logout">
         <Logout />
+      </Route>
+      <Route path="/profile">
+        <Profile />
       </Route>
     </Switch>
   );
