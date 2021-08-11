@@ -10,8 +10,8 @@ const MainPage = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (token) setIsLoggedIn(true)
-    }, [token])
+        if (token || user) setIsLoggedIn(true)
+    }, [token, user])
 
     useEffect(() => {
         if (!user && token) {
