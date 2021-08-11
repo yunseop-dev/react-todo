@@ -4,25 +4,21 @@ import Login from './page/Login'
 import Logout from './page/Logout'
 import MainPage from './page/MainPage'
 import Profile from './page/Profile'
+import Todo from './page/Todo'
+
+const routes = [
+  { path: '/', exact: true, component: MainPage },
+  { path: '/register', component: Register },
+  { path: '/login', component: Login },
+  { path: '/logout', component: Logout },
+  { path: '/profile', component: Profile },
+  { path: '/todo', component: Todo },
+]
 
 function App() {
   return (
     <Switch>
-      <Route path='/' exact>
-        <MainPage />
-      </Route>
-      <Route path="/register">
-        <Register />
-      </Route>
-      <Route path="/login">
-        <Login />
-      </Route>
-      <Route path="/logout">
-        <Logout />
-      </Route>
-      <Route path="/profile">
-        <Profile />
-      </Route>
+      {routes.map(({ path, exact, component: Component }) => <Route key={path} path={path} exact={exact}><Component /></Route>)}
     </Switch>
   );
 }
