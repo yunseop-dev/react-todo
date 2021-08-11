@@ -33,6 +33,7 @@ const Profile = () => {
     return <div>
         <h1>{user?.name || 'Guest'}'s Profile</h1>
         <form onSubmit={onSubmit}>
+            <img src={`${process.env.REACT_APP_API_URL}/user/${user?._id}/avatar`} />
             <label htmlFor='email'>
                 email
                 <input id='email' type='email' value={email} disabled />
