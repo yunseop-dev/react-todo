@@ -5,9 +5,14 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import rootReducer from './modules'
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-const store = createStore(rootReducer, composeWithDevTools())
+import { createLogger } from 'redux-logger';
+
+const logger = createLogger()
+const store = createStore(rootReducer, composeWithDevTools(
+  applyMiddleware(logger)
+))
 
 ReactDOM.render(
   <React.StrictMode>
