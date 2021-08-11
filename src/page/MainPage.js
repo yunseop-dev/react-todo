@@ -25,6 +25,7 @@ const MainPage = () => {
             {!isLoggedIn && <li><Link to='/register'>회원가입</Link></li>}
             {isLoggedIn && <li><Link to='/profile'>프로필</Link></li>}
             <li><Link to={!isLoggedIn ? '/login' : '/logout'}>{!isLoggedIn ? '로그인' : '로그아웃'}</Link></li>
+            {isLoggedIn && <li><Link to='/todo'>할일</Link></li>}
         </ul>
 
     </div>

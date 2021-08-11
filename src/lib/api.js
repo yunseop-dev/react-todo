@@ -6,3 +6,5 @@ export const register = ({ name, email, password, age }) => client('user/registe
 export const updateUser = ({ name, password, age }) => client('user/me', { method: 'PUT', body: { name, password, age } })
 export const uploadAvatar = (formData) => client('user/me/avatar', { body: formData })
 export const removeUser = () => client('user/me', { method: 'DELETE' })
+
+export const getTasks = () => client('task')

@@ -1,13 +1,14 @@
 import { combineReducers } from "redux"
 import user, { userSaga } from "./user"
+import todo, { todoSaga } from "./todo"
 import { all } from 'redux-saga/effects'
 
 const rootReducer = combineReducers({
-    user
+    user, todo
 })
 
 export function* rootSaga() {
-    yield all([userSaga()])
+    yield all([userSaga(), todoSaga()])
 }
 
 export default rootReducer
