@@ -1,5 +1,5 @@
 import { combineReducers } from "redux"
-import user from "./user"
+import user, { userSaga } from "./user"
 import { all } from 'redux-saga/effects'
 
 const rootReducer = combineReducers({
@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
 })
 
 export function* rootSaga() {
-    yield all([])
+    yield all([userSaga()])
 }
 
 export default rootReducer
