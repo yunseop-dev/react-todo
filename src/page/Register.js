@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux"
 import { register } from '../modules/user'
 
 const Register = () => {
-    const [name, onChangeName] = useInput('')
-    const [email, onChangeEmail] = useInput('')
-    const [password, onChangePassword] = useInput('')
-    const [age, onChangeAge] = useInput(20)
+    const name = useInput('')
+    const email = useInput('')
+    const password = useInput('')
+    const age = useInput(20)
 
     const dispatch = useDispatch()
 
@@ -27,28 +27,28 @@ const Register = () => {
             <p>
                 <label htmlFor="name">
                     name
-                    <input id="name" type="text" onChange={onChangeName} value={name} required />
+                    <input id="name" type="text" {...name} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="email">
                     email
-                    <input id="email" type="email" onChange={onChangeEmail} value={email} required />
+                    <input id="email" type="email" {...email} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="password">
                     password
-                    <input id="password" type="password" minLength="7" onChange={onChangePassword} value={password} required />
+                    <input id="password" type="password" minLength="7" {...password} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="age">
                     age
-                    <input id="age" type="number" onChange={onChangeAge} value={age} required />
+                    <input id="age" type="number" {...age} required />
                 </label>
             </p>
 

@@ -5,8 +5,8 @@ import { login } from '../modules/user'
 
 const Login = () => {
     const history = useHistory()
-    const [email, onChangeEmail] = useInput('')
-    const [password, onChangePassword] = useInput('')
+    const email = useInput('')
+    const password = useInput('')
     const dispatch = useDispatch()
 
     const onSubmit = async (e) => {
@@ -22,13 +22,13 @@ const Login = () => {
         <p>
             <label htmlFor='email'>
                 email
-                <input id='email' type='email' onChange={onChangeEmail} value={email} required />
+                <input id='email' type='email' {...email} required />
             </label>
         </p>
         <p>
             <label htmlFor='password'>
                 password
-                <input id='password' type='password' onChange={onChangePassword} value={password} required />
+                <input id='password' type='password' {...password} required />
             </label>
         </p>
         <button type='submit'>Login</button>
