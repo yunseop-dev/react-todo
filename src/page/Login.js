@@ -12,7 +12,7 @@ const Login = () => {
     const onSubmit = async (e) => {
         e.preventDefault()
         try {
-            dispatch(login({ email, password }))
+            dispatch(login({ email: email.value, password: password.value }))
             history.push('/')
         } catch (error) {
             alert(error)

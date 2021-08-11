@@ -14,7 +14,7 @@ const Register = () => {
         e.preventDefault();
         try {
             dispatch(register({
-                name, email, password, age
+                name: name.value, email: email.value, password: password.value, age: age.value
             }))
         } catch (error) {
             console.log(error)
