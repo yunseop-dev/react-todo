@@ -14,10 +14,10 @@ const MainPage = () => {
     }, [token])
 
     useEffect(() => {
-        if (!user) {
+        if (!user && token) {
             dispatch(getUser())
         }
-    }, [dispatch, user])
+    }, [dispatch, user, token])
 
     return <div>
         <h1>{user?.name || 'Guest'}'s MainPage</h1>
