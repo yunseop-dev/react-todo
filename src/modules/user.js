@@ -4,33 +4,7 @@ import { push } from '../lib/historyUtils'
 const GET_USER = 'user/GET_USER'
 const GET_USER_SUCCESS = 'user/GET_USER_SUCCESS'
 const GET_USER_FAILED = 'user/GET_USER_FAILED'
-
-const LOGIN = 'user/LOGIN'
-const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
-const LOGIN_FAILED = 'user/LOGIN_FAILED'
-
-const LOGOUT = 'user/LOGOUT'
-const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
-const LOGOUT_FAILED = 'user/LOGOUT_FAILED'
-
-const REGISTER = 'user/REGISTER'
-const REGISTER_SUCCESS = 'user/REGISTER_SUCCESS'
-const REGISTER_FAILED = 'user/REGISTER_FAILED'
-
-const UPDATE_USER = 'user/UPDATE_USER'
-const UPDATE_USER_SUCCESS = 'user/UPDATE_USER_SUCCESS'
-const UPDATE_USER_FAILED = 'user/UPDATE_USER_FAILED'
-
 export const getUser = () => ({ type: GET_USER })
-export const login = ({ email, password }) => ({ type: LOGIN, payload: { email, password } })
-export const logout = () => ({ type: LOGOUT })
-export const register = ({ name, email, password, age }) => ({ type: REGISTER, payload: { name, email, password, age } })
-export const updateUser = ({ name, password, age }) => ({ type: UPDATE_USER, payload: { name, password, age } })
-
-const initialState = {
-    user: null
-}
-
 export function* getUserSaga() {
     try {
         const user = yield call(api.getUser);
@@ -40,6 +14,10 @@ export function* getUserSaga() {
     }
 }
 
+const LOGIN = 'user/LOGIN'
+const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
+const LOGIN_FAILED = 'user/LOGIN_FAILED'
+export const login = ({ email, password }) => ({ type: LOGIN, payload: { email, password } })
 export function* loginSaga(action) {
     try {
         const { token, user } = yield call(api.login, action.payload)
@@ -51,6 +29,12 @@ export function* loginSaga(action) {
     }
 }
 
+
+
+const LOGOUT = 'user/LOGOUT'
+const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
+const LOGOUT_FAILED = 'user/LOGOUT_FAILED'
+export const logout = () => ({ type: LOGOUT })
 export function* logoutSaga() {
     try {
         const result = yield call(api.logout)
@@ -63,6 +47,10 @@ export function* logoutSaga() {
     }
 }
 
+const REGISTER = 'user/REGISTER'
+const REGISTER_SUCCESS = 'user/REGISTER_SUCCESS'
+const REGISTER_FAILED = 'user/REGISTER_FAILED'
+export const register = ({ name, email, password, age }) => ({ type: REGISTER, payload: { name, email, password, age } })
 export function* registerSaga(action) {
     try {
         const { token, user } = yield call(api.register, action.payload)
@@ -73,6 +61,10 @@ export function* registerSaga(action) {
     }
 }
 
+const UPDATE_USER = 'user/UPDATE_USER'
+const UPDATE_USER_SUCCESS = 'user/UPDATE_USER_SUCCESS'
+const UPDATE_USER_FAILED = 'user/UPDATE_USER_FAILED'
+export const updateUser = ({ name, password, age }) => ({ type: UPDATE_USER, payload: { name, password, age } })
 export function* updateUserSaga(action) {
     try {
         const { success, data: user } = yield call(api.updateUser, action.payload)
@@ -84,12 +76,30 @@ export function* updateUserSaga(action) {
     }
 }
 
+const UPLOAD_AVATAR = 'user/UPLOAD_AVATAR'
+const UPLOAD_AVATAR_SUCCESS = 'user/UPLOAD_AVATAR_SUCCESS'
+const UPLOAD_AVATAR_FAILED = 'user/UPLOAD_AVATAR_FAILED'
+export const uploadAvatar = (formData) => ({ type: UPLOAD_AVATAR, payload: formData })
+export function* uploadAvatarSaga(action) {
+    try {
+        const { succes: success } = yield call(api.uploadAvatar, action.payload)
+        if (success) yield put({ type: UPLOAD_AVATAR_SUCCESS })
+    } catch (error) {
+        yield put({ type: UPLOAD_AVATAR_FAILED, message: error.message });
+    }
+}
+
+const initialState = {
+    user: null
+}
+
 export function* userSaga() {
     yield takeLatest(GET_USER, getUserSaga)
     yield takeLatest(LOGIN, loginSaga)
     yield takeLatest(LOGOUT, logoutSaga)
     yield takeLatest(REGISTER, registerSaga)
     yield takeLatest(UPDATE_USER, updateUserSaga)
+    yield takeLatest(UPLOAD_AVATAR, uploadAvatarSaga)
 }
 
 function user(state = initialState, action) {

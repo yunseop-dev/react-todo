@@ -1,14 +1,16 @@
 import useInput from "../lib/useInput"
+import useFile from "../lib/useFile"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useLocalStorage from "../lib/useLocalStorage"
-import { getUser } from '../modules/user'
-import { updateUser } from '../modules/user'
+import { getUser, updateUser, uploadAvatar } from '../modules/user'
+
 const Profile = () => {
     const [token] = useLocalStorage('token');
     const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
 
+    const { value: file, onChange: onChangeFile } = useFile(undefined)
     const { value: email, onChange: onChangeEmail } = useInput('')
     const { value: name, onChange: onChangeName } = useInput('')
     const { value: password, onChange: onChangePassword } = useInput('')
@@ -25,6 +27,14 @@ const Profile = () => {
         }
     }, [dispatch, user, token])
 
+    useEffect(() => {
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            dispatch(uploadAvatar(formData))
+        }
+    }, [file])
+
     const onSubmit = (e) => {
         e.preventDefault()
         dispatch(updateUser({ name, password: password.length > 0 ? password : undefined, age }))
@@ -33,23 +43,39 @@ const Profile = () => {
     return <div>
         <h1>{user?.name || 'Guest'}'s Profile</h1>
         <form onSubmit={onSubmit}>
-            <img src={`${process.env.REACT_APP_API_URL}/user/${user?._id}/avatar`} />
-            <label htmlFor='email'>
-                email
-                <input id='email' type='email' value={email} disabled />
-            </label>
-            <label htmlFor='name'>
-                name
-                <input id='name' type='text' onChange={onChangeName} value={name} />
-            </label>
-            <label htmlFor='password'>
-                password
-                <input id='password' type='password' onChange={onChangePassword} value={password} minLength="7" />
-            </label>
-            <label htmlFor='age'>
-                age
-                <input id='age' type='text' onChange={onChangeAge} value={age} />
-            </label>
+            {user && <img src={`${process.env.REACT_APP_API_URL}/user/${user?._id}/avatar`} width="100" height="100" />}
+            <ul>
+                <li>
+                    <label htmlFor='avatar'>
+                        avatar
+                        <input id='avatar' type='file' onChange={onChangeFile} />
+                    </label>
+                </li>
+                <li>
+                    <label htmlFor='email'>
+                        email
+                        <input id='email' type='email' value={email} disabled />
+                    </label>
+                </li>
+                <li>
+                    <label htmlFor='name'>
+                        name
+                        <input id='name' type='text' onChange={onChangeName} value={name} />
+                    </label>
+                </li>
+                <li>
+                    <label htmlFor='password'>
+                        password
+                        <input id='password' type='password' onChange={onChangePassword} value={password} minLength="7" />
+                    </label>
+                </li>
+                <li>
+                    <label htmlFor='age'>
+                        age
+                        <input id='age' type='text' onChange={onChangeAge} value={age} />
+                    </label>
+                </li>
+            </ul>
             <button type="submit">Submit</button>
         </form>
     </div>

@@ -14,7 +14,12 @@ export default async function client(endpoint, { body, ...customConfig } = {}) {
         },
     }
     if (body) {
-        config.body = JSON.stringify(body)
+        if (body instanceof FormData) {
+            config.body = body
+            delete config.headers['content-type']
+        } else {
+            config.body = JSON.stringify(body)
+        }
     }
     const response = await window
         .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
