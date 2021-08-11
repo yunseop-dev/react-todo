@@ -1,6 +1,7 @@
 import { put, takeLatest, call } from 'redux-saga/effects'
 import * as api from '../lib/api'
 import { push } from '../lib/historyUtils'
+
 const GET_USER = 'user/GET_USER'
 const GET_USER_SUCCESS = 'user/GET_USER_SUCCESS'
 const GET_USER_FAILED = 'user/GET_USER_FAILED'
@@ -22,14 +23,12 @@ export function* loginSaga(action) {
     try {
         const { token, user } = yield call(api.login, action.payload)
         window.localStorage.setItem('token', `Bearer ${token}`)
-        yield call(push, '/')
         yield put({ type: LOGIN_SUCCESS, user })
+        yield call(push, '/')
     } catch (error) {
         yield put({ type: LOGIN_FAILED, message: error.message });
     }
 }
-
-
 
 const LOGOUT = 'user/LOGOUT'
 const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
@@ -89,6 +88,23 @@ export function* uploadAvatarSaga(action) {
     }
 }
 
+const REMOVE_USER = 'user/REMOVE_USER'
+const REMOVE_USER_SUCCESS = 'user/REMOVE_USER_SUCCESS'
+const REMOVE_USER_FAILED = 'user/REMOVE_USER_FAILED'
+export const removeUser = () => ({ type: REMOVE_USER })
+export function* removeUserSaga(action) {
+    try {
+        const data = yield call(api.removeUser, action.payload)
+        if (data) {
+            window.localStorage.setItem('token', '')
+            yield put({ type: REMOVE_USER_SUCCESS })
+            yield call(push, '/')
+        }
+    } catch (error) {
+        yield put({ type: REMOVE_USER_FAILED, message: error.message });
+    }
+}
+
 const initialState = {
     user: null
 }
@@ -100,6 +116,7 @@ export function* userSaga() {
     yield takeLatest(REGISTER, registerSaga)
     yield takeLatest(UPDATE_USER, updateUserSaga)
     yield takeLatest(UPLOAD_AVATAR, uploadAvatarSaga)
+    yield takeLatest(REMOVE_USER, removeUserSaga)
 }
 
 function user(state = initialState, action) {
@@ -109,6 +126,7 @@ function user(state = initialState, action) {
         case REGISTER_SUCCESS:
         case UPDATE_USER_SUCCESS:
             return { ...state, user: action.user }
+        case REMOVE_USER_SUCCESS:
         case LOGOUT_SUCCESS:
             return { ...state, user: null }
         default:

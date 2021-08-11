@@ -3,7 +3,7 @@ import useFile from "../lib/useFile"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useLocalStorage from "../lib/useLocalStorage"
-import { getUser, updateUser, uploadAvatar } from '../modules/user'
+import { getUser, updateUser, uploadAvatar, removeUser } from '../modules/user'
 
 const Profile = () => {
     const [token] = useLocalStorage('token');
@@ -38,6 +38,10 @@ const Profile = () => {
     const onSubmit = (e) => {
         e.preventDefault()
         dispatch(updateUser({ name, password: password.length > 0 ? password : undefined, age }))
+    }
+
+    const onRemoveUser = () => {
+        if (window.confirm('Do you want to remove this account?')) dispatch(removeUser())
     }
 
     return <div>
@@ -77,6 +81,7 @@ const Profile = () => {
                 </li>
             </ul>
             <button type="submit">Submit</button>
+            <button type="button" onClick={onRemoveUser}>Remove User</button>
         </form>
     </div>
 }
