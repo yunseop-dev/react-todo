@@ -21,6 +21,7 @@ const MainPage = () => {
 
     return <div>
         <h1>{user?.name || 'Guest'}'s MainPage</h1>
+        <Link to='/register'>회원가입</Link>
         <Link to={!isLoggedIn ? '/login' : '/logout'}>
             {!isLoggedIn ? '로그인' : '로그아웃'}
         </Link>
