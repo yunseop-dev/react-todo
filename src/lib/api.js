@@ -8,3 +8,4 @@ export const uploadAvatar = (formData) => client('user/me/avatar', { body: formD
 export const removeUser = () => client('user/me', { method: 'DELETE' })
 
 export const getTasks = () => client('task')
+export const addTask = ({ description }) => client('task', { body: { description } })

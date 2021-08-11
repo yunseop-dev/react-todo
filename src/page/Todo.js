@@ -1,15 +1,17 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getTasks } from "../modules/todo"
+import { addTask, getTasks } from "../modules/todo"
 import useInput from "../lib/useInput"
 
 const Todo = () => {
     const dispatch = useDispatch()
     const tasks = useSelector(state => state.todo.tasks)
-    const { value: text, onChange: onChangeText } = useInput('')
+    const { value: text, onChange: onChangeText, setValue: setText } = useInput('')
 
     const onSubmit = (e) => {
         e.preventDefault()
+        dispatch(addTask({ description: text }))
+        setText('')
     }
 
     useEffect(() => {
