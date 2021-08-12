@@ -13,7 +13,7 @@ export const login = ({ email, password }) => ({ type: LOGIN, payload: { email, 
 export const loginSaga = createRequestSaga(LOGIN, api.login)
 
 const LOGOUT = 'user/LOGOUT'
-const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
+export const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
 export const logout = () => ({ type: LOGOUT })
 export const logoutSaga = createRequestSaga(LOGOUT, api.logout)
 
@@ -33,7 +33,7 @@ export const uploadAvatar = (formData) => ({ type: UPLOAD_AVATAR, payload: formD
 export const uploadAvatarSaga = createRequestSaga(UPLOAD_AVATAR, api.uploadAvatar)
 
 const REMOVE_USER = 'user/REMOVE_USER'
-const REMOVE_USER_SUCCESS = 'user/REMOVE_USER_SUCCESS'
+export const REMOVE_USER_SUCCESS = 'user/REMOVE_USER_SUCCESS'
 export const removeUser = () => ({ type: REMOVE_USER })
 export const removeUserSaga = createRequestSaga(REMOVE_USER, api.removeUser)
 
@@ -66,7 +66,7 @@ function user(state = initialState, action) {
             return { ...state, user: { ...state.user, avatar: `${process.env.REACT_APP_API_URL}/user/${state.user._id}/avatar?d=${new Date().getTime()}` } }
         case REMOVE_USER_SUCCESS:
         case LOGOUT_SUCCESS:
-            window.localStorage.setItem('token', '')
+            window.localStorage.removeItem('token')
             return { ...state, user: null }
         default:
             return state
