@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addTask, getTasks, updateTask, removeTask } from "../modules/todo"
 import useInput from "../lib/useInput"
@@ -8,15 +8,18 @@ const Todo = () => {
     const tasks = useSelector(state => state.todo.tasks)
     const { value: text, onChange: onChangeText, setValue: setText } = useInput('')
 
+    const onLoadTask = useCallback(() => dispatch(getTasks()), [dispatch])
+    const onAddTask = useCallback(data => dispatch(addTask(data)), [dispatch])
+
     const onSubmit = (e) => {
         e.preventDefault()
-        dispatch(addTask({ description: text }))
+        onAddTask({ description: text })
         setText('')
     }
 
     useEffect(() => {
-        dispatch(getTasks())
-    }, [])
+        if (tasks === null) onLoadTask()
+    }, [onLoadTask, tasks])
 
     return <div>
         <h1>할 일</h1>
@@ -25,7 +28,7 @@ const Todo = () => {
             <button type="submit">등록</button>
         </form>
         <ul>
-            {tasks.map(({ _id, completed, description }) => <TodoItem key={_id} id={_id} completed={completed} description={description} />)}
+            {tasks?.map?.(({ _id, completed, description }) => <TodoItem key={_id} id={_id} completed={completed} description={description} />)}
         </ul>
     </div>
 }

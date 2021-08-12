@@ -1,4 +1,4 @@
-import { put, takeLatest, call } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
 import * as api from '../lib/api'
 import createRequestSaga from '../lib/createRequestSaga'
 
@@ -15,7 +15,7 @@ export const addTaskSaga = createRequestSaga(ADD_TASK, api.addTask)
 const UPDATE_TASK = 'user/UPDATE_TASK'
 const UPDATE_TASK_SUCCESS = 'user/UPDATE_TASK_SUCCESS'
 export const updateTask = ({ id, completed, description }) => ({ type: UPDATE_TASK, payload: { id, completed, description } })
-export const updateTaskSaga = createRequestSaga(ADD_TASK, api.updateTask)
+export const updateTaskSaga = createRequestSaga(UPDATE_TASK, api.updateTask)
 
 const REMOVE_TASK = 'user/REMOVE_TASK'
 const REMOVE_TASK_SUCCESS = 'user/REMOVE_TASK_SUCCESS'
@@ -31,7 +31,7 @@ export function* todoSaga() {
 
 const initialState = {
     count: 0,
-    tasks: []
+    tasks: null
 }
 
 function todo(state = initialState, action) {

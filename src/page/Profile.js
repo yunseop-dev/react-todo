@@ -1,6 +1,6 @@
 import useInput from "../lib/useInput"
 import useFile from "../lib/useFile"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useLocalStorage from "../lib/useLocalStorage"
 import { getUser, updateUser, uploadAvatar, removeUser } from '../modules/user'
@@ -18,28 +18,13 @@ const Profile = () => {
     const { value: password, onChange: onChangePassword } = useInput('')
     const { value: age, onChange: onChangeAge, setValue: setAge } = useInput(0)
 
-    useEffect(() => {
-        if (!user && token) {
-            dispatch(getUser())
-        }
-        if (user) {
-            setEmail(user.email)
-            setName(user.name)
-            setAge(user.age)
-        }
-    }, [dispatch, user, token])
-
-    useEffect(() => {
-        if (file) {
-            const formData = new FormData();
-            formData.append('avatar', file);
-            dispatch(uploadAvatar(formData))
-        }
-    }, [file])
+    const upload = useCallback((formData) => dispatch(uploadAvatar(formData)), [dispatch])
+    const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
+    const onUpdateUser = useCallback((data) => dispatch(updateUser(data)))
 
     const onSubmit = (e) => {
         e.preventDefault()
-        dispatch(updateUser({ name, password: password.length > 0 ? password : undefined, age }))
+        onUpdateUser({ name, password: password.length > 0 ? password : undefined, age })
     }
 
     const onRemoveUser = () => {
@@ -49,10 +34,29 @@ const Profile = () => {
         }
     }
 
+    useEffect(() => {
+        if (!user && token) {
+            onLoadUser()
+        }
+        if (user) {
+            setEmail(user.email)
+            setName(user.name)
+            setAge(user.age)
+        }
+    }, [dispatch, onLoadUser, user, token])
+
+    useEffect(() => {
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            upload(formData)
+        }
+    }, [file, upload])
+
     return <div>
         <h1>{user?.name || 'Guest'}'s Profile</h1>
         <form onSubmit={onSubmit}>
-            {user && <img src={user.avatar} width="100" height="100" />}
+            {user && <img src={user.avatar} width="100" height="100" alt="profile avatar" />}
             <ul>
                 <li>
                     <label htmlFor='avatar'>

@@ -1,22 +1,24 @@
 import { useHistory } from "react-router-dom"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { logout } from '../modules/user'
 
 const Logout = () => {
     const history = useHistory()
     const dispatch = useDispatch()
+
+    const onLogout = useCallback(() => dispatch(logout()), [dispatch])
     useEffect(() => {
-        onLogout()
-    })
-    const onLogout = async () => {
-        try {
-            dispatch(logout())
-            history.push('/')
-        } catch (error) {
-            alert(error)
+        const fn = async () => {
+            try {
+                onLogout()
+                history.push('/')
+            } catch (error) {
+                alert(error)
+            }
         }
-    }
+        fn()
+    })
     return <></>
 }
 
