@@ -15,7 +15,7 @@ export const loginSaga = createRequestSaga(LOGIN, api.login)
 const LOGOUT = 'user/LOGOUT'
 const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS'
 export const logout = () => ({ type: LOGOUT })
-export const logoutSaga = createRequestSaga(LOGOUT, api.login)
+export const logoutSaga = createRequestSaga(LOGOUT, api.logout)
 
 const REGISTER = 'user/REGISTER'
 const REGISTER_SUCCESS = 'user/REGISTER_SUCCESS'
@@ -61,7 +61,7 @@ function user(state = initialState, action) {
             window.localStorage.setItem('token', `Bearer ${token}`)
             return { ...state, user: { ...user, avatar: `${process.env.REACT_APP_API_URL}/user/${user._id}/avatar?d=${new Date().getTime()}` } }
         case UPDATE_USER_SUCCESS:
-            return { ...state, user: { ...action.payload.user, avatar: `${process.env.REACT_APP_API_URL}/user/${action.payload.user._id}/avatar?d=${new Date().getTime()}` } }
+            return { ...state, user: { ...action.payload.data, avatar: `${process.env.REACT_APP_API_URL}/user/${action.payload.data._id}/avatar?d=${new Date().getTime()}` } }
         case UPLOAD_AVATAR_SUCCESS:
             return { ...state, user: { ...state.user, avatar: `${process.env.REACT_APP_API_URL}/user/${state.user._id}/avatar?d=${new Date().getTime()}` } }
         case REMOVE_USER_SUCCESS:
