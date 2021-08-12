@@ -4,11 +4,13 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useLocalStorage from "../lib/useLocalStorage"
 import { getUser, updateUser, uploadAvatar, removeUser } from '../modules/user'
+import { useHistory } from "react-router-dom"
 
 const Profile = () => {
     const [token] = useLocalStorage('token');
     const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const { value: file, onChange: onChangeFile } = useFile(undefined)
     const { value: email, setValue: setEmail } = useInput('')
@@ -41,7 +43,10 @@ const Profile = () => {
     }
 
     const onRemoveUser = () => {
-        if (window.confirm('Do you want to remove this account?')) dispatch(removeUser())
+        if (window.confirm('Do you want to remove this account?')) {
+            dispatch(removeUser())
+            history.push('/')
+        }
     }
 
     return <div>

@@ -1,6 +1,7 @@
 import useInput from '../lib/useInput'
 import { useDispatch } from "react-redux"
 import { register } from '../modules/user'
+import { useHistory } from 'react-router-dom'
 
 const Register = () => {
     const { value: name, onChange: onChangeName } = useInput('')
@@ -9,6 +10,7 @@ const Register = () => {
     const { value: age, onChange: onChangeAge } = useInput(20)
 
     const dispatch = useDispatch()
+    const history = useHistory()
 
     async function onSubmit(e) {
         e.preventDefault();
@@ -16,6 +18,7 @@ const Register = () => {
             dispatch(register({
                 name: name, email: email, password: password, age: age
             }))
+            history.push('/')
         } catch (error) {
             console.log(error)
             alert(error)
