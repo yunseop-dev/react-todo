@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom"
-import { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { logout } from '../modules/user'
 
@@ -22,4 +22,4 @@ const Logout = () => {
     return <></>
 }
 
-export default Logout
+export default React.memo(Logout)

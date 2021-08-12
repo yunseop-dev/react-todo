@@ -1,6 +1,6 @@
 import useInput from "../lib/useInput"
 import useFile from "../lib/useFile"
-import { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useLocalStorage from "../lib/useLocalStorage"
 import { getUser, updateUser, uploadAvatar, removeUser } from '../modules/user'
@@ -95,4 +95,4 @@ const Profile = () => {
     </div>
 }
 
-export default Profile
+export default React.memo(Profile)

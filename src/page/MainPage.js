@@ -1,3 +1,4 @@
+import React, { useCallback } from "react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
@@ -8,16 +9,16 @@ const MainPage = () => {
     const [token] = useLocalStorage('token');
     const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
-
+    const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
     useEffect(() => {
         if (token || user) setIsLoggedIn(true)
     }, [token, user])
 
     useEffect(() => {
         if (!user && token) {
-            dispatch(getUser())
+            onLoadUser()
         }
-    }, [dispatch, user, token])
+    }, [onLoadUser, user, token])
 
     return <div>
         <h1>{user?.name || 'Guest'}'s MainPage</h1>
@@ -31,4 +32,4 @@ const MainPage = () => {
     </div>
 }
 
-export default MainPage
+export default React.memo(MainPage)

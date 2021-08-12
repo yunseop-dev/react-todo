@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addTask, getTasks, updateTask, removeTask } from "../modules/todo"
+import { addTask, getTasks } from "../modules/todo"
 import useInput from "../lib/useInput"
+import TodoItem from '../components/TodoItem'
 
 const Todo = () => {
     const dispatch = useDispatch()
@@ -33,37 +34,4 @@ const Todo = () => {
     </div>
 }
 
-const TodoItem = ({ id, completed, description }) => {
-    const [isModifying, setIsModifying] = useState(false)
-    const { value: text, onChange: onChangeText } = useInput(description)
-    const dispatch = useDispatch()
-
-    const onKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            dispatch(updateTask({ id, description: text }))
-            onToggle()
-        }
-    }
-
-    const onToggle = () => {
-        setIsModifying(val => !val)
-    }
-
-    const onChangeChecked = (e) => {
-        dispatch(updateTask({ id, completed: e.target.checked }))
-    }
-
-    const onRemove = () => {
-        dispatch(removeTask(id))
-    }
-
-    return <li>
-        <input id={id} type="checkbox" onChange={onChangeChecked} checked={completed} />
-        {isModifying
-            ? <input type="text" onChange={onChangeText} onKeyDown={onKeyDown} value={text} />
-            : <span onClick={onToggle}>{description}</span>}
-        <button type="button" onClick={onRemove}>삭제</button>
-    </li>
-}
-
-export default Todo
+export default React.memo(Todo)

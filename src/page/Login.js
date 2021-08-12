@@ -2,17 +2,18 @@ import useInput from "../lib/useInput"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { login } from '../modules/user'
+import React, { useCallback } from "react"
 
 const Login = () => {
     const history = useHistory()
     const { value: email, onChange: onChangeEmail } = useInput('')
     const { value: password, onChange: onChangePassword } = useInput('')
     const dispatch = useDispatch()
-
+    const onLogin = useCallback((data) => dispatch(login(data)), [dispatch])
     const onSubmit = async (e) => {
         e.preventDefault()
         try {
-            dispatch(login({ email, password }))
+            onLogin({ email, password })
             history.push('/')
         } catch (error) {
             alert(error)
@@ -35,4 +36,4 @@ const Login = () => {
     </form>
 }
 
-export default Login
+export default React.memo(Login)
