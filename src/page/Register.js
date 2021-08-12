@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux"
 import { register } from '../modules/user'
 
 const Register = () => {
-    const name = useInput('')
-    const email = useInput('')
-    const password = useInput('')
-    const age = useInput(20)
+    const { value: name, onChange: onChangeName } = useInput('')
+    const { value: email, onChange: onChangeEmail } = useInput('')
+    const { value: password, onChange: onChangePassword } = useInput('')
+    const { value: age, onChange: onChangeAge } = useInput(20)
 
     const dispatch = useDispatch()
 
@@ -14,7 +14,7 @@ const Register = () => {
         e.preventDefault();
         try {
             dispatch(register({
-                name: name.value, email: email.value, password: password.value, age: age.value
+                name: name, email: email, password: password, age: age
             }))
         } catch (error) {
             console.log(error)
@@ -27,28 +27,28 @@ const Register = () => {
             <p>
                 <label htmlFor="name">
                     name
-                    <input id="name" type="text" {...name} required />
+                    <input id="name" type="text" onChange={onChangeName} value={name} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="email">
                     email
-                    <input id="email" type="email" {...email} required />
+                    <input id="email" type="email" onChange={onChangeEmail} value={email} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="password">
                     password
-                    <input id="password" type="password" minLength="7" {...password} required />
+                    <input id="password" type="password" minLength="7" onChange={onChangePassword} value={password} required />
                 </label>
             </p>
 
             <p>
                 <label htmlFor="age">
                     age
-                    <input id="age" type="number" {...age} required />
+                    <input id="age" type="number" onChange={onChangeAge} value={age} required />
                 </label>
             </p>
 

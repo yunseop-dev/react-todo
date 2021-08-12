@@ -22,9 +22,11 @@ export const login = ({ email, password }) => ({ type: LOGIN, payload: { email, 
 export function* loginSaga(action) {
     try {
         const { token, user } = yield call(api.login, action.payload)
-        window.localStorage.setItem('token', `Bearer ${token}`)
-        yield put({ type: LOGIN_SUCCESS, user })
-        yield call(push, '/')
+        if (token && user) {
+            window.localStorage.setItem('token', `Bearer ${token}`)
+            yield put({ type: LOGIN_SUCCESS, user })
+            yield call(push, '/')
+        }
     } catch (error) {
         yield put({ type: LOGIN_FAILED, message: error.message });
     }
@@ -53,8 +55,11 @@ export const register = ({ name, email, password, age }) => ({ type: REGISTER, p
 export function* registerSaga(action) {
     try {
         const { token, user } = yield call(api.register, action.payload)
-        window.localStorage.setItem('token', `Bearer ${token}`)
-        yield put({ type: REGISTER_SUCCESS, user })
+        if (token && user) {
+            window.localStorage.setItem('token', `Bearer ${token}`)
+            yield put({ type: REGISTER_SUCCESS, user })
+            yield call(push, '/')
+        }
     } catch (error) {
         yield put({ type: REGISTER_FAILED, message: error.message });
     }
@@ -81,6 +86,7 @@ const UPLOAD_AVATAR_FAILED = 'user/UPLOAD_AVATAR_FAILED'
 export const uploadAvatar = (formData) => ({ type: UPLOAD_AVATAR, payload: formData })
 export function* uploadAvatarSaga(action) {
     try {
+        // succes: 서버 쪽에서 오타가 나있음.
         const { succes: success } = yield call(api.uploadAvatar, action.payload)
         if (success) yield put({ type: UPLOAD_AVATAR_SUCCESS })
     } catch (error) {

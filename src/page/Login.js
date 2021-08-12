@@ -5,15 +5,14 @@ import { login } from '../modules/user'
 
 const Login = () => {
     const history = useHistory()
-    const email = useInput('')
-    const password = useInput('')
+    const { value: email, onChange: onChangeEmail } = useInput('')
+    const { value: password, onChange: onChangePassword } = useInput('')
     const dispatch = useDispatch()
 
     const onSubmit = async (e) => {
         e.preventDefault()
         try {
             dispatch(login({ email: email.value, password: password.value }))
-            history.push('/')
         } catch (error) {
             alert(error)
         }
@@ -22,13 +21,13 @@ const Login = () => {
         <p>
             <label htmlFor='email'>
                 email
-                <input id='email' type='email' {...email} required />
+                <input id='email' type='email' onChange={onChangeEmail} value={email} required />
             </label>
         </p>
         <p>
             <label htmlFor='password'>
                 password
-                <input id='password' type='password' {...password} required />
+                <input id='password' type='password' onChange={onChangePassword} value={password} required />
             </label>
         </p>
         <button type='submit'>Login</button>
