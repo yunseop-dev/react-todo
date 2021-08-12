@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addTask, getTasks, updateTask } from "../modules/todo"
+import { addTask, getTasks, updateTask, removeTask } from "../modules/todo"
 import useInput from "../lib/useInput"
 
 const Todo = () => {
@@ -50,12 +50,16 @@ const TodoItem = ({ id, completed, description }) => {
         dispatch(updateTask({ id, completed: e.target.checked }))
     }
 
+    const onRemove = () => {
+        dispatch(removeTask(id))
+    }
+
     return <li>
         <input id={id} type="checkbox" onChange={onChangeChecked} checked={completed} />
         {isModifying
             ? <input type="text" onChange={onChangeText} onKeyDown={onKeyDown} value={text} />
             : <span onClick={onToggle}>{description}</span>}
-        <button type="button" onClick={() => { }}>삭제</button>
+        <button type="button" onClick={onRemove}>삭제</button>
     </li>
 }
 

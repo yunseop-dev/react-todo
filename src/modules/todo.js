@@ -40,10 +40,24 @@ export function* updateTaskSaga(action) {
     }
 }
 
+const REMOVE_TASK = 'user/REMOVE_TASK'
+const REMOVE_TASK_SUCCESS = 'user/REMOVE_TASK_SUCCESS'
+const REMOVE_TASK_FAILED = 'user/REMOVE_TASK_FAILED'
+export const removeTask = (id) => ({ type: REMOVE_TASK, payload: id })
+export function* removeTaskSaga(action) {
+    try {
+        const { data: task, success } = yield call(api.removeTask, action.payload);
+        if (success) yield put({ type: REMOVE_TASK_SUCCESS, id: action.payload })
+    } catch (error) {
+        yield put({ type: REMOVE_TASK_FAILED, message: error.message });
+    }
+}
+
 export function* todoSaga() {
     yield takeLatest(GET_TASKS, getTasksSaga)
     yield takeLatest(ADD_TASK, addTaskSaga)
     yield takeLatest(UPDATE_TASK, updateTaskSaga)
+    yield takeLatest(REMOVE_TASK, removeTaskSaga)
 }
 
 const initialState = {
@@ -61,6 +75,11 @@ function todo(state = initialState, action) {
             return {
                 ...state,
                 tasks: state.tasks.map(task => task._id === action.task._id ? action.task : task)
+            }
+        case REMOVE_TASK_SUCCESS:
+            return {
+                ...state,
+                tasks: state.tasks.filter(task => task._id !== action.id)
             }
         default:
             return state
