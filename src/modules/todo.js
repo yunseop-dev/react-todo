@@ -27,9 +27,23 @@ export function* addTaskSaga(action) {
     }
 }
 
+const UPDATE_TASK = 'user/UPDATE_TASK'
+const UPDATE_TASK_SUCCESS = 'user/UPDATE_TASK_SUCCESS'
+const UPDATE_TASK_FAILED = 'user/UPDATE_TASK_FAILED'
+export const updateTask = ({ id, completed, description }) => ({ type: UPDATE_TASK, payload: { id, completed, description } })
+export function* updateTaskSaga(action) {
+    try {
+        const { data: task, success } = yield call(api.updateTask, action.payload);
+        if (success) yield put({ type: UPDATE_TASK_SUCCESS, task })
+    } catch (error) {
+        yield put({ type: UPDATE_TASK_FAILED, message: error.message });
+    }
+}
+
 export function* todoSaga() {
     yield takeLatest(GET_TASKS, getTasksSaga)
     yield takeLatest(ADD_TASK, addTaskSaga)
+    yield takeLatest(UPDATE_TASK, updateTaskSaga)
 }
 
 const initialState = {
@@ -43,6 +57,11 @@ function todo(state = initialState, action) {
             return { ...state, tasks: action.tasks, count: action.count }
         case ADD_TASK_SUCCESS:
             return { ...state, tasks: [...state.tasks, action.task], count: state.count + 1 }
+        case UPDATE_TASK_SUCCESS:
+            return {
+                ...state,
+                tasks: state.tasks.map(task => task._id === action.task._id ? action.task : task)
+            }
         default:
             return state
     }

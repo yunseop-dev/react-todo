@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addTask, getTasks } from "../modules/todo"
+import { addTask, getTasks, updateTask } from "../modules/todo"
 import useInput from "../lib/useInput"
 
 const Todo = () => {
@@ -25,14 +25,38 @@ const Todo = () => {
             <button type="submit">등록</button>
         </form>
         <ul>
-            {tasks.map(task => <li key={task._id}>
-                <input id={task._id} type="checkbox" onChange={e => console.log(e.target.checked)} checked={task.completed} />
-                <label htmlFor={task._id}>{task.description}</label>
-                <button type="button">수정</button>
-                <button type="button">삭제</button>
-            </li>)}
+            {tasks.map(({ _id, completed, description }) => <TodoItem key={_id} id={_id} completed={completed} description={description} />)}
         </ul>
     </div>
+}
+
+const TodoItem = ({ id, completed, description }) => {
+    const [isModifying, setIsModifying] = useState(false)
+    const { value: text, onChange: onChangeText } = useInput(description)
+    const dispatch = useDispatch()
+
+    const onKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            dispatch(updateTask({ id, description: text }))
+            onToggle()
+        }
+    }
+
+    const onToggle = () => {
+        setIsModifying(val => !val)
+    }
+
+    const onChangeChecked = (e) => {
+        dispatch(updateTask({ id, completed: e.target.checked }))
+    }
+
+    return <li>
+        <input id={id} type="checkbox" onChange={onChangeChecked} checked={completed} />
+        {isModifying
+            ? <input type="text" onChange={onChangeText} onKeyDown={onKeyDown} value={text} />
+            : <span onClick={onToggle}>{description}</span>}
+        <button type="button" onClick={() => { }}>삭제</button>
+    </li>
 }
 
 export default Todo

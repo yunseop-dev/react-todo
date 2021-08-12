@@ -9,3 +9,4 @@ export const removeUser = () => client('user/me', { method: 'DELETE' })
 
 export const getTasks = () => client('task')
 export const addTask = ({ description }) => client('task', { body: { description } })
+export const updateTask = ({ id, description, completed }) => client(`task/${id}`, { method: 'PUT', body: { description, completed } })
