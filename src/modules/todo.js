@@ -14,7 +14,7 @@ export const addTaskSaga = createRequestSaga(ADD_TASK, api.addTask)
 
 const UPDATE_TASK = 'user/UPDATE_TASK'
 const UPDATE_TASK_SUCCESS = 'user/UPDATE_TASK_SUCCESS'
-export const updateTask = ({ id, completed, description }) => ({ type: UPDATE_TASK, payload: { id, completed, description } })
+export const updateTask = (data) => ({ type: UPDATE_TASK, payload: data })
 export const updateTaskSaga = createRequestSaga(UPDATE_TASK, api.updateTask)
 
 const REMOVE_TASK = 'user/REMOVE_TASK'
@@ -40,6 +40,11 @@ function todo(state = initialState, action) {
             return { ...state, tasks: action.payload.data, count: action.payload.count }
         case ADD_TASK_SUCCESS:
             return { ...state, tasks: [...state.tasks, action.payload.data], count: state.count + 1 }
+        case UPDATE_TASK:
+            return {
+                ...state,
+                tasks: state.tasks.map(task => (task._id === action.payload.id) ? Object.assign(task, action.payload) : task)
+            }
         case UPDATE_TASK_SUCCESS:
             return {
                 ...state,
