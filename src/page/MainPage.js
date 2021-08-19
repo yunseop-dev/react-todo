@@ -2,12 +2,15 @@ import React, { useCallback } from "react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import useFetchInfo from "../lib/useFetchInfo"
 import useLocalStorage from "../lib/useLocalStorage"
-import { getUser } from '../modules/user'
+import { getUser, Types } from '../modules/user'
+
 const MainPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [token] = useLocalStorage('token');
     const user = useSelector(state => state.user.user)
+    const { isFetched } = useFetchInfo(Types.GET_USER)
     const dispatch = useDispatch()
     const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
     useEffect(() => {
@@ -15,10 +18,10 @@ const MainPage = () => {
     }, [token, user])
 
     useEffect(() => {
-        if (!user && token) {
+        if (!isFetched) {
             onLoadUser()
         }
-    }, [onLoadUser, user, token])
+    }, [onLoadUser, isFetched])
 
     return <div>
         <h1>{user?.name || 'Guest'}'s MainPage</h1>
