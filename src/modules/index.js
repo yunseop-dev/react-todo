@@ -1,12 +1,11 @@
 import { combineReducers } from "redux"
 import user, { Types, userSaga } from "./user"
 import todo, { todoSaga } from "./todo"
-import loading from "./loading"
 import fetchStatus from "./fetchStatus"
 import { all } from 'redux-saga/effects'
 
 const appReducer = combineReducers({
-    user, todo, loading, fetchStatus
+    user, todo, fetchStatus
 })
 
 const rootReducer = (state, action) => {
