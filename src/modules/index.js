@@ -3,6 +3,7 @@ import user, { Types, userSaga } from "./user"
 import todo, { todoSaga } from "./todo"
 import fetchStatus from "./fetchStatus"
 import { all } from 'redux-saga/effects'
+import { deleteApiCache } from "../lib/createRequestSaga"
 
 const appReducer = combineReducers({
     user, todo, fetchStatus
@@ -11,6 +12,7 @@ const appReducer = combineReducers({
 const rootReducer = (state, action) => {
     if ([Types.LOGOUT_SUCCESS, Types.REMOVE_USER_SUCCESS].includes(action.type)) {
         window.localStorage.removeItem('token')
+        deleteApiCache()
 
         return appReducer(undefined, action);
     }
