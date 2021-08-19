@@ -20,16 +20,16 @@ export const Types = {
 }
 
 export const getUser = () => ({ type: Types.GET_USER })
-export const getUserSaga = createRequestSaga(Types.GET_USER, api.getUser)
+export const getUserSaga = createRequestSaga(Types.GET_USER, api.getUser, true)
 
 export const login = ({ email, password }) => ({ type: Types.LOGIN, payload: { email, password } })
-export const loginSaga = createRequestSaga(Types.LOGIN, api.login)
+export const loginSaga = createRequestSaga(Types.LOGIN, api.login, true)
 
 export const logout = () => ({ type: Types.LOGOUT })
 export const logoutSaga = createRequestSaga(Types.LOGOUT, api.logout)
 
 export const register = ({ name, email, password, age }) => ({ type: Types.REGISTER, payload: { name, email, password, age } })
-export const registerSaga = createRequestSaga(Types.REGISTER, api.register)
+export const registerSaga = createRequestSaga(Types.REGISTER, api.register, true)
 
 export const updateUser = ({ name, password, age }) => ({ type: Types.UPDATE_USER, payload: { name, password, age } })
 export const updateUserSaga = createRequestSaga(Types.UPDATE_USER, api.updateUser)
