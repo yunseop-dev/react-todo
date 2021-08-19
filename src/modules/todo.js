@@ -13,8 +13,8 @@ export const Types = {
     REMOVE_TASK_SUCCESS: 'user/REMOVE_TASK_SUCCESS',
 }
 
-export const getTasks = () => ({ type: Types.GET_TASKS })
-export const getTasksSaga = createRequestSaga(Types.GET_TASKS, api.getTasks)
+export const getTasks = (payload) => ({ type: Types.GET_TASKS, payload })
+export const getTasksSaga = createRequestSaga(Types.GET_TASKS, api.getTasks, true)
 
 export const addTask = ({ description }) => ({ type: Types.ADD_TASK, payload: { description } })
 export const addTaskSaga = createRequestSaga(Types.ADD_TASK, api.addTask)
