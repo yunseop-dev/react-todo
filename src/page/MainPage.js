@@ -18,10 +18,10 @@ const MainPage = () => {
     }, [token, user])
 
     useEffect(() => {
-        if (!isFetched) {
+        if (!isFetched && token) {
             onLoadUser()
         }
-    }, [onLoadUser, isFetched])
+    }, [onLoadUser, isFetched, token])
 
     return <div>
         <h1>{user?.name || 'Guest'}'s MainPage</h1>
