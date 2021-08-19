@@ -2,15 +2,15 @@ import useInput from "../lib/useInput"
 import useFile from "../lib/useFile"
 import React, { useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import useLocalStorage from "../lib/useLocalStorage"
-import { getUser, updateUser, uploadAvatar, removeUser } from '../modules/user'
+import { getUser, updateUser, uploadAvatar, removeUser, Types } from '../modules/user'
 import { useHistory } from "react-router-dom"
+import useFetchInfo from "../lib/useFetchInfo"
 
 const Profile = () => {
-    const [token] = useLocalStorage('token');
     const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
     const history = useHistory()
+    const { isFetched } = useFetchInfo(Types.GET_USER)
 
     const { value: file, onChange: onChangeFile } = useFile(undefined)
     const { value: email, setValue: setEmail } = useInput('')
@@ -20,7 +20,7 @@ const Profile = () => {
 
     const upload = useCallback((formData) => dispatch(uploadAvatar(formData)), [dispatch])
     const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
-    const onUpdateUser = useCallback((data) => dispatch(updateUser(data)))
+    const onUpdateUser = useCallback((data) => dispatch(updateUser(data)), [dispatch])
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -35,15 +35,18 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        if (!user && token) {
+        if (!isFetched) {
             onLoadUser()
         }
+    }, [dispatch, onLoadUser, isFetched])
+
+    useEffect(() => {
         if (user) {
             setEmail(user.email)
             setName(user.name)
             setAge(user.age)
         }
-    }, [dispatch, onLoadUser, user, token])
+    }, [user, setEmail, setName, setAge])
 
     useEffect(() => {
         if (file) {
