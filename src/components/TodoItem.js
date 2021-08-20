@@ -1,8 +1,27 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch } from "react-redux"
+import styled from "styled-components"
 import useInput from "../lib/useInput"
 import { removeTask, updateTask } from "../modules/todo"
+import Input from "../components/Input"
+import Button from "../components/Button"
 
+const TodoWrapper = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 50%;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: 1px solid;
+    font-size: 2rem;
+`;
+
+const Checkbox = styled.div`
+    input[type=checkbox] {
+        display: none;
+    }
+`;
 
 const TodoItem = ({ id, completed, description }) => {
     const [isModifying, setIsModifying] = useState(false)
@@ -11,26 +30,38 @@ const TodoItem = ({ id, completed, description }) => {
 
     const onUpdateTask = useCallback((data) => dispatch(updateTask(data)), [dispatch])
     const onChangeChecked = useCallback((e) => dispatch(updateTask({ id, completed: e.target.checked })), [id, dispatch])
-    const onRemove = useCallback(() => dispatch(removeTask(id)), [id, dispatch])
+    const onRemove = useCallback(() => {
+        if (window.confirm('정말 삭제하시겠습니까?')) dispatch(removeTask(id))
+    }, [id, dispatch])
 
     const onKeyDown = (e) => {
         if (e.key === 'Enter') {
-            onUpdateTask({ id, description: text })
-            onToggle()
+            onUpdate()
         }
+    }
+
+    const onUpdate = () => {
+        onUpdateTask({ id, description: text })
+        onToggle()
     }
 
     const onToggle = () => {
         setIsModifying(val => !val)
     }
 
-    return <li>
-        <input id={id} type="checkbox" onChange={onChangeChecked} checked={completed} />
+    return <TodoWrapper>
+        <Checkbox>
+            <input id={id} type="checkbox" onChange={onChangeChecked} checked={completed} />
+            <label htmlFor={id}>{completed ? '☑️' : '✅'}</label>
+        </Checkbox>
         {isModifying
-            ? <input type="text" onChange={onChangeText} onKeyDown={onKeyDown} value={text} />
+            ? <Input type="text" onChange={onChangeText} onKeyDown={onKeyDown} value={text} />
             : <span onClick={onToggle}>{description}</span>}
-        <button type="button" onClick={onRemove}>삭제</button>
-    </li>
+        <div>
+            {isModifying && <Button type="button" onClick={onUpdate}>💾</Button>}
+            <Button type="button" onClick={onRemove}>❌</Button>
+        </div>
+    </TodoWrapper>
 }
 
 export default React.memo(TodoItem)
