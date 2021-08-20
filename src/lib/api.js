@@ -7,11 +7,7 @@ export const updateUser = ({ name, password, age }) => client('user/me', { metho
 export const uploadAvatar = (formData) => client('user/me/avatar', { body: formData })
 export const removeUser = () => client('user/me', { method: 'DELETE' })
 
-export const getTasks = (pageParams) => {
-    const params = new URLSearchParams(pageParams)
-
-    return client('task?' + params)
-}
+export const getTasks = () => client('task')
 export const addTask = ({ description }) => client('task', { body: { description } })
 export const updateTask = ({ id, description, completed }) => client(`task/${id}`, { method: 'PUT', body: { description, completed } })
 export const removeTask = (id) => client(`task/${id}`, { method: 'DELETE' })
