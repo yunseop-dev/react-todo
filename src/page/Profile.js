@@ -5,6 +5,19 @@ import { useDispatch, useSelector } from "react-redux"
 import { getUser, updateUser, uploadAvatar, removeUser, Types } from '../modules/user'
 import { useHistory } from "react-router-dom"
 import useFetchInfo from "../lib/useFetchInfo"
+import Input from "../components/Input"
+import Label from "../components/Label"
+import Wrapper from "../components/Wrapper"
+import InputItem from "../components/InputItem"
+import styled from "styled-components"
+import { SquareButton } from "../components/Button"
+
+const Avatar = styled.img`
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    background: #eee;
+`
 
 const Profile = () => {
     const user = useSelector(state => state.user.user)
@@ -56,46 +69,46 @@ const Profile = () => {
         }
     }, [file, upload])
 
-    return <div>
-        <h1>{user?.name || 'Guest'}'s Profile</h1>
+    return <Wrapper>
+        <h1>프로필 관리</h1>
         <form onSubmit={onSubmit}>
-            {user && <img src={user.avatar} width="100" height="100" alt="profile avatar" />}
+            {user && <Avatar src={user.avatar} alt="profile avatar" />}
             <ul>
-                <li>
-                    <label htmlFor='avatar'>
+                <InputItem>
+                    <Label htmlFor='avatar'>
                         avatar
-                        <input id='avatar' type='file' onChange={onChangeFile} />
-                    </label>
-                </li>
-                <li>
-                    <label htmlFor='email'>
+                    </Label>
+                    <Input id='avatar' type='file' onChange={onChangeFile} />
+                </InputItem>
+                <InputItem>
+                    <Label htmlFor='email'>
                         email
-                        <input id='email' type='email' value={email} disabled />
-                    </label>
-                </li>
-                <li>
-                    <label htmlFor='name'>
+                    </Label>
+                    <Input id='email' type='email' value={email} disabled />
+                </InputItem>
+                <InputItem>
+                    <Label htmlFor='name'>
                         name
-                        <input id='name' type='text' onChange={onChangeName} value={name} />
-                    </label>
-                </li>
-                <li>
-                    <label htmlFor='password'>
+                    </Label>
+                    <Input id='name' type='text' onChange={onChangeName} value={name} />
+                </InputItem>
+                <InputItem>
+                    <Label htmlFor='password'>
                         password
-                        <input id='password' type='password' onChange={onChangePassword} value={password} minLength="7" />
-                    </label>
-                </li>
-                <li>
-                    <label htmlFor='age'>
+                    </Label>
+                    <Input id='password' type='password' onChange={onChangePassword} value={password} minLength="7" />
+                </InputItem>
+                <InputItem>
+                    <Label htmlFor='age'>
                         age
-                        <input id='age' type='text' onChange={onChangeAge} value={age} />
-                    </label>
-                </li>
+                    </Label>
+                    <Input id='age' type='number' onChange={onChangeAge} value={age} />
+                </InputItem>
             </ul>
-            <button type="submit">Submit</button>
-            <button type="button" onClick={onRemoveUser}>Remove User</button>
+            <SquareButton type="submit">수정</SquareButton>
+            <SquareButton type="button" onClick={onRemoveUser}>회원 탈퇴</SquareButton>
         </form>
-    </div>
+    </Wrapper>
 }
 
 export default React.memo(Profile)

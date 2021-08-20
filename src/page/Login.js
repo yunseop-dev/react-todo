@@ -4,7 +4,11 @@ import { useDispatch } from "react-redux"
 import { login, Types } from '../modules/user'
 import React, { useCallback, useEffect } from "react"
 import useFetchInfo from "../lib/useFetchInfo"
-
+import Input from "../components/Input"
+import InputItem from "../components/InputItem"
+import Label from "../components/Label"
+import { SquareButton } from "../components/Button"
+import Wrapper from '../components/Wrapper'
 const Login = () => {
     const history = useHistory()
     const { value: email, onChange: onChangeEmail } = useInput('')
@@ -27,21 +31,26 @@ const Login = () => {
         }
     }, [history, isFetched])
 
-    return <form onSubmit={onSubmit}>
-        <p>
-            <label htmlFor='email'>
-                email
-                <input id='email' type='email' onChange={onChangeEmail} value={email} required />
-            </label>
-        </p>
-        <p>
-            <label htmlFor='password'>
-                password
-                <input id='password' type='password' onChange={onChangePassword} value={password} required />
-            </label>
-        </p>
-        <button type='submit'>Login</button>
-    </form>
+    return <Wrapper>
+        <form onSubmit={onSubmit}>
+            <ul>
+                <InputItem>
+                    <Label htmlFor='email'>
+                        email
+                    </Label>
+                    <Input id='email' type='email' onChange={onChangeEmail} value={email} required />
+                </InputItem>
+                <InputItem>
+                    <Label htmlFor='password'>
+                        password
+                    </Label>
+                    <Input id='password' type='password' onChange={onChangePassword} value={password} required />
+                </InputItem>
+            </ul>
+            <SquareButton type='submit'>Login</SquareButton>
+        </form>
+    </Wrapper>
+
 }
 
 export default React.memo(Login)

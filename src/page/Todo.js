@@ -5,6 +5,9 @@ import useInput from "../lib/useInput"
 import TodoItem from '../components/TodoItem'
 import useFetchInfo from "../lib/useFetchInfo"
 import { Types } from '../modules/todo'
+import Input from "../components/Input"
+import Button from "../components/Button"
+import Wrapper from "../components/Wrapper"
 
 const Todo = () => {
     const dispatch = useDispatch()
@@ -17,6 +20,10 @@ const Todo = () => {
 
     const onSubmit = (e) => {
         e.preventDefault()
+        if (!text) {
+            window.alert('내용을 입력하세요')
+            return
+        }
         onAddTask({ description: text })
         setText('')
     }
@@ -25,12 +32,13 @@ const Todo = () => {
         if (!isFetched) onLoadTask()
     }, [onLoadTask, isFetched])
 
-    return <div>
-        <h1>할 일</h1>
-        <form onSubmit={onSubmit}>
-            <input type="text" value={text} onChange={onChangeText} autoFocus />
-            <button type="submit">등록</button>
-        </form>
+    return <Wrapper>
+        <section>
+            <form onSubmit={onSubmit}>
+                <Input type="text" value={text} onChange={onChangeText} autoFocus placeholder="할 일 입력..." />
+                <Button type="submit">➕</Button>
+            </form>
+        </section>
         <ul>
             {tasks.map?.(({ _id, completed, description }) => <TodoItem
                 key={_id}
@@ -38,7 +46,7 @@ const Todo = () => {
                 completed={completed}
                 description={description} />)}
         </ul>
-    </div>
+    </Wrapper>
 }
 
 export default React.memo(Todo)
