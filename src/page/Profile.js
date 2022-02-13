@@ -12,8 +12,8 @@ import useUser from "../swr/useUser"
 
 
 const Profile = () => {
-    const [token, setToken] = useLocalStorage("token", "");
-    const { user, mutate } = useUser(token);
+    const [, setToken] = useLocalStorage("token", "");
+    const { user, mutate } = useUser();
     const history = useHistory()
 
     const { value: name, onChange: onChangeName, setValue: setName } = useInput('')

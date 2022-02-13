@@ -6,9 +6,7 @@ import Profile from './page/Profile'
 import Todo from './page/Todo'
 
 import React from "react"
-import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import useLocalStorage from "./lib/useLocalStorage"
 import styled from "styled-components";
 import useUser from "./swr/useUser";
 
@@ -46,13 +44,8 @@ const routes = [
 ]
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [token] = useLocalStorage('token');
-  const { user } = useUser(token);
+  const { user } = useUser();
 
-  useEffect(() => {
-    if (token || user) setIsLoggedIn(true)
-  }, [token, user])
 
   return (<>
     <Header>
@@ -60,7 +53,7 @@ function App() {
       <Navigation>
         <ul>
           {
-            (!isLoggedIn ? [
+            (!user ? [
               { path: '/register', name: '회원가입' },
               { path: '/login', name: '로그인' },
             ] : [
