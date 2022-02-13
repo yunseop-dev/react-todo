@@ -5,14 +5,13 @@ import Logout from './page/Logout'
 import Profile from './page/Profile'
 import Todo from './page/Todo'
 
-import React, { useCallback } from "react"
+import React from "react"
 import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import useLocalStorage from "./lib/useLocalStorage"
-import { getUser, Types } from './modules/user'
-import useFetchInfo from "./lib/useFetchInfo";
 import styled from "styled-components";
+import useUser from "./swr/useUser";
+
 const Header = styled.header`
     display: flex;
     justify-content: space-between;
@@ -48,21 +47,12 @@ const routes = [
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const user = useSelector(state => state.user.user)
-  const dispatch = useDispatch()
-  const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
   const [token] = useLocalStorage('token');
-  const { isFetched } = useFetchInfo(Types.GET_USER)
+  const { user } = useUser(token);
 
   useEffect(() => {
     if (token || user) setIsLoggedIn(true)
   }, [token, user])
-
-  useEffect(() => {
-    if (!isFetched && token) {
-      onLoadUser()
-    }
-  }, [onLoadUser, isFetched, token])
 
   return (<>
     <Header>
