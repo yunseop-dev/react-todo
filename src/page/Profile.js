@@ -1,90 +1,61 @@
 import useInput from "../lib/useInput"
-import useFile from "../lib/useFile"
-import React, { useCallback, useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getUser, updateUser, uploadAvatar, removeUser, Types } from '../modules/user'
+import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
-import useFetchInfo from "../lib/useFetchInfo"
 import Input from "../components/Input"
 import Label from "../components/Label"
 import Wrapper from "../components/Wrapper"
 import InputItem from "../components/InputItem"
-import styled from "styled-components"
+import { updateUser, removeUser } from "../lib/api"
+import useLocalStorage from "../lib/useLocalStorage"
 import { SquareButton } from "../components/Button"
+import useUser from "../swr/useUser"
 
-const Avatar = styled.img`
-    width: 10rem;
-    height: 10rem;
-    border-radius: 50%;
-    background: #eee;
-`
 
 const Profile = () => {
-    const user = useSelector(state => state.user.user)
-    const dispatch = useDispatch()
+    const [, setToken] = useLocalStorage("token", "");
+    const { user, mutate } = useUser();
     const history = useHistory()
-    const { isFetched } = useFetchInfo(Types.GET_USER)
 
-    const { value: file, onChange: onChangeFile } = useFile(undefined)
-    const { value: email, setValue: setEmail } = useInput('')
     const { value: name, onChange: onChangeName, setValue: setName } = useInput('')
     const { value: password, onChange: onChangePassword } = useInput('')
     const { value: age, onChange: onChangeAge, setValue: setAge } = useInput(0)
 
-    const upload = useCallback((formData) => dispatch(uploadAvatar(formData)), [dispatch])
-    const onLoadUser = useCallback(() => dispatch(getUser()), [dispatch])
-    const onUpdateUser = useCallback((data) => dispatch(updateUser(data)), [dispatch])
-
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault()
-        onUpdateUser({ name, password: password.length > 0 ? password : undefined, age })
+        const data = {
+            ...user,
+            name,
+            age
+        }
+        await updateUser(data)
+        await mutate(data)
     }
 
-    const onRemoveUser = () => {
+    const onRemoveUser = async () => {
         if (window.confirm('Do you want to remove this account?')) {
-            dispatch(removeUser())
+            await removeUser()
+            await mutate(null)
+            setToken('')
             history.push('/')
         }
     }
 
     useEffect(() => {
-        if (!isFetched) {
-            onLoadUser()
-        }
-    }, [dispatch, onLoadUser, isFetched])
-
-    useEffect(() => {
         if (user) {
-            setEmail(user.email)
             setName(user.name)
             setAge(user.age)
         }
-    }, [user, setEmail, setName, setAge])
-
-    useEffect(() => {
-        if (file) {
-            const formData = new FormData();
-            formData.append('avatar', file);
-            upload(formData)
-        }
-    }, [file, upload])
+    }, [user, setName, setAge])
 
     return <Wrapper>
         <h1>프로필 관리</h1>
         <form onSubmit={onSubmit}>
-            {user && <Avatar src={user.avatar} alt="profile avatar" />}
             <ul>
-                <InputItem>
-                    <Label htmlFor='avatar'>
-                        avatar
-                    </Label>
-                    <Input id='avatar' type='file' onChange={onChangeFile} />
-                </InputItem>
                 <InputItem>
                     <Label htmlFor='email'>
                         email
                     </Label>
-                    <Input id='email' type='email' value={email} disabled />
+                    <Input id='email' type='email' value={user?.email ?? ''} disabled />
                 </InputItem>
                 <InputItem>
                     <Label htmlFor='name'>

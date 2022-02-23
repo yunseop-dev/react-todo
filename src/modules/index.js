@@ -10,7 +10,7 @@ const appReducer = combineReducers({
 })
 
 const rootReducer = (state, action) => {
-    if ([Types.LOGOUT_SUCCESS, Types.REMOVE_USER_SUCCESS].includes(action.type)) {
+    if ([Types.LOGOUT_SUCCESS].includes(action.type)) {
         window.localStorage.removeItem('token')
         deleteApiCache()
 
