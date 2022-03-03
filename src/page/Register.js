@@ -1,27 +1,31 @@
 import useInput from '../lib/useInput'
-import { useDispatch } from "react-redux"
-import { register } from '../modules/user'
 import { useHistory } from 'react-router-dom'
-import React, { useCallback } from 'react'
+import React from 'react'
 import Input from "../components/Input"
 import Label from "../components/Label"
 import Wrapper from "../components/Wrapper"
 import InputItem from '../components/InputItem'
 import { SquareButton } from "../components/Button"
+import { register } from '../lib/api'
+import useUser from '../swr/useUser'
+import useLocalStorage from '../lib/useLocalStorage'
+import { useSWRConfig } from 'swr'
+
 const Register = () => {
     const { value: name, onChange: onChangeName } = useInput('')
     const { value: email, onChange: onChangeEmail } = useInput('')
     const { value: password, onChange: onChangePassword } = useInput('')
     const { value: age, onChange: onChangeAge } = useInput(20)
-
-    const dispatch = useDispatch()
     const history = useHistory()
-    const onRegister = useCallback(data => dispatch(register(data)), [dispatch])
+    const { mutate } = useSWRConfig();
+    const [_, setToken] = useLocalStorage('token', null);
 
     async function onSubmit(e) {
         e.preventDefault();
         try {
-            onRegister({ name, email, password, age })
+            const { user, token } = await register({ name, email, password, age })
+            console.log(await mutate('user/me', user))
+            setToken(token)
             history.push('/')
         } catch (error) {
             console.log(error)

@@ -1,24 +1,18 @@
+import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
-import React, { useCallback, useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { logout } from '../modules/user'
+import useUser from "../swr/useUser";
+import useLocalStorage from "../lib/useLocalStorage";
 
 const Logout = () => {
     const history = useHistory()
-    const dispatch = useDispatch()
+    const { mutate } = useUser();
+    const [_, setToken] = useLocalStorage('token', '');
 
-    const onLogout = useCallback(() => dispatch(logout()), [dispatch])
     useEffect(() => {
-        const fn = async () => {
-            try {
-                onLogout()
-                history.push('/')
-            } catch (error) {
-                alert(error)
-            }
-        }
-        fn()
-    })
+        mutate(null)
+        setToken('')
+        history.push('/')
+    }, [history, mutate, setToken])
     return <></>
 }
 

@@ -46,7 +46,6 @@ const routes = [
 function App() {
   const { user } = useUser();
 
-
   return (<>
     <Header>
       {user ? <span>{user.name}'s Todo</span> : <span>Todo App</span>}
@@ -72,4 +71,4 @@ function App() {
   );
 }
 
-export default App;
+export default React.memo(App);

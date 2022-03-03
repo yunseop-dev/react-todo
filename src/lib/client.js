@@ -23,18 +23,10 @@ export default async function client(endpoint, { body, ...customConfig } = {}) {
     }
     const response = await window
         .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
-    if (response.status === 401) {
-        logout()
-        window.location.assign(window.location)
-        return
-    }
     if (response.ok) {
         return response.json()
     } else {
         const errorMessage = await response.text()
         return Promise.reject(new Error(errorMessage))
     }
-}
-function logout() {
-    window.localStorage.removeItem(localStorageKey)
 }

@@ -1,9 +1,8 @@
 import useSWR from 'swr'
-import client from '../lib/client'
+import { getUser } from '../lib/api'
 
 const useUser = () => {
-    const { data, mutate, error } = useSWR(`user/me`, client)
-
+    const { data, mutate, error } = useSWR('user/me', getUser)
     return {
         user: data,
         isLoading: !error && !data,
